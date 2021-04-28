@@ -100,7 +100,7 @@ export default class BrowserAdapter implements fhirclient.Adapter
      */
     redirect(to: string): void
     {
-        location.href = to;
+        location.assign(to);
     }
 
     /**
