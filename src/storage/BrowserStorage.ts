@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default class Storage
 {
     /**
@@ -6,11 +7,17 @@ export default class Storage
      */
     async get(key: string): Promise<any>
     {
-        const value = sessionStorage[key];
-        if (value) {
-            return JSON.parse(value);
-        }
-        return null;
+        
+		const getData = async () => {
+		  try {
+			const value = await AsyncStorage.getItem(key)
+			if(value !== null) {
+				return JSON.parse(value);
+			}
+		  } catch(e) {
+			return null;
+		  }
+		}
     }
 
     /**
@@ -19,8 +26,14 @@ export default class Storage
      */
     async set(key: string, value: any): Promise<any>
     {
-        sessionStorage[key] = JSON.stringify(value);
-        return value;
+		
+		const storeData = async (value) => {
+		  try {
+			await AsyncStorage.setItem(key, JSON.stringify(value))
+			return value;
+		  } catch (e) {
+			return e;
+		  }
     }
 
     /**
@@ -30,8 +43,8 @@ export default class Storage
      */
     async unset(key: string): Promise<boolean>
     {
-        if (key in sessionStorage) {
-            delete sessionStorage[key];
+        if (key in AsyncStorage) {
+            delete AsyncStorage[key];
             return true;
         }
         return false;
